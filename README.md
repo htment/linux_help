@@ -50,7 +50,17 @@ sudo mdadm --manage /dev/md1 --add /dev/sdc
 cat /proc/mdstat
 
 ```
+использовать команду mdadm --examine для просмотра информации о старом суперблоке на диске:
+  
+     sudo mdadm --examine /dev/sdc
 
+2. Удаление старого суперблока:
+   - Для удаления старого суперблока с диска sdc, используйте команду mdadm --zero-superblock:
+     
+```
+     sudo mdadm --zero-superblock /dev/sdc
+```
+     
 
 ### Пересобрать рейд
 ```
