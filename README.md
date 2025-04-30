@@ -11,6 +11,7 @@ tail -f rsync_status.log
 
 
 ``lsblk``
+
 ``art@art-virtual-machine:~$ sudo dd if=/dev/sdc of=/dev/null bs=1M count=1024``
 ```
 dd: ошибка чтения '/dev/sdc': Ошибка ввода/вывода
