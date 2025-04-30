@@ -39,4 +39,14 @@ sudo dd if=/dev/zero of=/dev/sdc bs=1M status=progress
 ```
 -----------------------------------------------------------------------------------
 
+подготовим диск
+```
+ sudo wipefs -a /dev/sdc
+```
+```
+sudo mdadm --manage /dev/md1 --add /dev/sdc
+```
+```
+cat /proc/mdstat
 
+```
