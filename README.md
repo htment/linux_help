@@ -25,4 +25,11 @@ dd: ошибка чтения '/dev/sdc': Ошибка ввода/вывода
  sudo udevadm info --query=all --name=/dev/sdc
  sudo hdparm -I /dev/sdc
 ```
+
+очень долго
+`` sudo badblocks -sv /dev/sdc``
+``sudo fsck /dev/sdc``
+
 -----------------------------------------------------------------------------------
+
+
