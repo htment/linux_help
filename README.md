@@ -30,6 +30,9 @@ dd: ошибка чтения '/dev/sdc': Ошибка ввода/вывода
 `` sudo badblocks -sv /dev/sdc``
 ``sudo fsck /dev/sdc``
 
+
+забить нолями
+``` sudo dd if=/dev/zero of=/dev/sdc bs=1M status=progress```
 -----------------------------------------------------------------------------------
 
 
