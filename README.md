@@ -55,17 +55,17 @@ cat /proc/mdstat
 ### Пересобрать рейд
 ```
 
-   sudo mdadm --stop /dev/md1
-      sudo lsof /dev/sdc
-      sudo mdadm --manage /dev/md1 --remove /dev/sdc
-    sudo lsof /dev/md1
+ sudo mdadm --stop /dev/md1
+ sudo lsof /dev/sdc
+ sudo mdadm --manage /dev/md1 --remove /dev/sdc
+ sudo lsof /dev/md1
 
-   sudo fuser -m /dev/md1
-   sudo mdadm --grow /dev/md1 --raid-devices=4 --force
+sudo fuser -m /dev/md1
+sudo mdadm --grow /dev/md1 --raid-devices=4 --force
 sudo  mdadm --grow /dev/md1 --array-size 976507904
 
 sudo mdadm --grow /dev/md1 --raid-devices=4 --force
- watch cat /proc/mdstat
+watch cat /proc/mdstat
 ```
 
 
@@ -82,7 +82,7 @@ sudo mdadm --grow /dev/md1 --raid-devices=4 --force
 2. Создание точки монтирования /SDC:
    - Убедитесь, что каталог /SDC существует. Если нет, создайте его:
      
-``
+```
      sudo mkdir /SDC
  ```    
 
