@@ -10,9 +10,11 @@ tail -f rsync_status.log
 ## Анализ проблем с диском
 
 
-``lsblk``
+```
+lsblk
 
-``art@art-virtual-machine:~$ sudo dd if=/dev/sdc of=/dev/null bs=1M count=1024``
+art@art-virtual-machine:~$ sudo dd if=/dev/sdc of=/dev/null bs=1M count=1024
+```
 ```
 dd: ошибка чтения '/dev/sdc': Ошибка ввода/вывода
 6+1 записей получено
