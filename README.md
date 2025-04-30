@@ -50,3 +50,54 @@ sudo mdadm --manage /dev/md1 --add /dev/sdc
 cat /proc/mdstat
 
 ```
+
+
+### Пересобрать рейд
+```
+
+   sudo mdadm --stop /dev/md1
+      sudo lsof /dev/sdc
+      sudo mdadm --manage /dev/md1 --remove /dev/sdc
+    sudo lsof /dev/md1
+
+   sudo fuser -m /dev/md1
+   sudo mdadm --grow /dev/md1 --raid-devices=4 --force
+sudo  mdadm --grow /dev/md1 --array-size 976507904
+
+sudo mdadm --grow /dev/md1 --raid-devices=4 --force
+ watch cat /proc/mdstat
+```
+
+
+
+### Шаги по форматированию диска sdc и монтированию к папке /SDC:
+
+1. Форматирование диска sdc:
+   - Запустите команду для форматирования диска sdc с использованием файловой системы ext4:
+     
+```
+     sudo mkfs.ext4 /dev/sdc
+ ```    
+
+2. Создание точки монтирования /SDC:
+   - Убедитесь, что каталог /SDC существует. Если нет, создайте его:
+     
+``
+     sudo mkdir /SDC
+ ```    
+
+3. Монтирование диска sdc к /SDC:
+   - Примонтируйте отформатированный диск sdc к каталогу /SDC:
+     
+```
+     sudo mount /dev/sdc /SDC
+```     
+
+4. Проверка монтирования и настройка автозагрузки:
+   - Убедитесь, что диск успешно примонтирован к /SDC и можно начать использовать его.
+   - Для автоматического монтирования при перезагрузке добавьте запись в файл /etc/fstab:
+     
+```
+     /dev/sdc   /SDC   ext4   defaults   0   2
+```
+     
