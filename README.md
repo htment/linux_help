@@ -123,71 +123,56 @@ watch cat /proc/mdstat
 
 *Шаг 2: Установка необходимых утилит*
 1. Установите пакет `mdadm`, если он еще не установлен:
-   
+```   
    sudo apt-get update
    sudo apt-get install mdadm
-   
-copy
-
-
+```   
+
 
 *Шаг 3: Создание RAID 10*
 1. Выполните следующую команду для создания RAID 10 из дисков:
-   
+  ``` 
    sudo mdadm --create --verbose /dev/md0 --level=10 --raid-devices=5 /dev/sdc /dev/sdd /dev/sde /dev/sdf /dev/sdg
-   
-copy
-
-
+  ``` 
+
    Замените `/dev/md0` на желаемое имя для RAID устройства.
 
 *Шаг 4: Проверьте состояние RAID*
 1. С помощью команды `cat /proc/mdstat` проверьте состояние созданного RAID:
-   
+```   
    cat /proc/mdstat
    
-copy
-
-
+```
 
 *Шаг 5: Форматирование RAID устройства*
 1. Отформатируйте RAID устройство в нужной файловой системе, например, ext4:
-   
+ ```  
    sudo mkfs.ext4 /dev/md0
-   
-copy
-
-
+```
 
 *Шаг 6: Монтирование RAID*
 1. Создайте точку монтирования:
-   
+  ``` 
    sudo mkdir /mnt/raid10
    
-copy
-
-
+```
 2. Смонтируйте RAID устройство:
-   
+ ```  
    sudo mount /dev/md0 /mnt/raid10
    
-copy
-
-
+```
 
 *Шаг 7: Обновление файла fstab*
 1. Для автоматического монтирования RAID устройства при загрузке добавьте запись в файл `/etc/fstab`:
-   
+```   
    /dev/md0    /mnt/raid10    ext4    defaults    0    0
    
-copy
-
-
+```
 
 *Шаг 8: Завершение*
 1. Проверьте, что RAID корректно смонтирован:
-   
+ ```  
    df -h
 
-
+```
      
