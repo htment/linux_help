@@ -19,7 +19,7 @@ SOURCE_DIR="/home/upload"
 DEST_DIR="/raid_upl/upload"
 DESTINATION="/raid_upl/upload"
 
-RSYNC_OPTS="-av --partial --timeout=1600 --progress --bwlimit=1000"
+RSYNC_OPTS="-avh --partial --timeout=1600 --progress --bwlimit=1M --block-size=16384"
 MAX_ATTEMPTS=3
 RETRY_DELAY=10
 SCRIPT_NAME=$(basename "$0")
@@ -113,7 +113,7 @@ copy_single_file() {
 }
 
 # Основная логика
-
+ensure_single_instance
 # 1. Создаем индекс исходных файлов
 if ! create_index; then
     exit 1
