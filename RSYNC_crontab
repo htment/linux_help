@@ -1,0 +1,2 @@
+
+rsync -avh --progress --partial --bwlimit=200K  --ignore-errors --exclude ".trashed*" art@192.168.31.44:/raid_upl/SORT_files /mnt/ > RSYNC.LOG
