@@ -7,6 +7,7 @@
 lsblk | grep -E 'sdb|sdc|sdd|sde|sdf'
 ```
 Если на дисках есть разделы, их нужно удалить:  
+
 ```
 for disk in sdb sdc sdd sde sdf; do sudo sgdisk --zap-all /dev/$disk; done
 ```
@@ -23,7 +24,8 @@ for disk in sdb sdc sdd sde sdf; do sudo wipefs -a /dev/$disk; sudo dd if=/dev/z
 ```
 mdadm --stop /dev/md
 ```
-```
+
+
 #### 1.2. Очищаем суперблоки (если ранее был RAID)  
 ```
 for disk in sdb sdc sdd sde sdf; do sudo mdadm --zero-superblock /dev/$disk; done
