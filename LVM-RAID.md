@@ -17,7 +17,7 @@ bash
 ```
 for disk in sdb sdc sdd sde sdf; do sudo wipefs -a /dev/$disk; sudo dd if=/dev/zero of=/dev/$disk bs=1M count=100; done
 → wipefs стирает сигнатуры, а dd перезаписывает начало диска нулями.
-
+```
 
 
 ```
