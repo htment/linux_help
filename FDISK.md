@@ -5,3 +5,11 @@
 sudo fdisk -l
 
 ```
+
+
+
+Форматируем
+
+```
+sudo mkfs.ext4 /dev/sdb1
+```
