@@ -10,6 +10,20 @@ lsblk | grep -E 'sdb|sdc|sdd|sde|sdf'
 ```
 for disk in sdb sdc sdd sde sdf; do sudo sgdisk --zap-all /dev/$disk; done
 ```
+
+
+Альтернатива (если sgdisk нет):
+bash
+```
+for disk in sdb sdc sdd sde sdf; do sudo wipefs -a /dev/$disk; sudo dd if=/dev/zero of=/dev/$disk bs=1M count=100; done
+→ wipefs стирает сигнатуры, а dd перезаписывает начало диска нулями.
+
+
+
+```
+mdadm --stop /dev/md
+```
+```
 #### 1.2. Очищаем суперблоки (если ранее был RAID)  
 ```
 for disk in sdb sdc sdd sde sdf; do sudo mdadm --zero-superblock /dev/$disk; done
