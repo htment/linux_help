@@ -18,7 +18,7 @@ SOURCE_DIR="/home/upload"
 DEST_DIR="/mnt"
 DESTINATION="/mnt"
 
-RSYNC_OPTS="-avh --partial --timeout=1600 --progress --bwlimit=1M --block-size=16384"
+RSYNC_OPTS="-avh --partial --timeout=0 --progress --bwlimit=1000M --block-size=16384"
 MAX_ATTEMPTS=3
 RETRY_DELAY=10
 SCRIPT_NAME=$(basename "$0")
