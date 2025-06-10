@@ -1,34 +1,69 @@
 #!/bin/bash
 
-# Функция для извлечения даты из имени файла и изменения времени модификации
-process_file() {
-    local filename="$1"
-    local basename=$(basename "$filename")
+# Функция для извлечения даты из имени файла
+extract_date() {
+    local basename="$1"
     local date_str=""
 
-    # Попытка извлечь дату в формате IMG_YYYYMMDD_HHMMSS
-    if [[ "$basename" =~ (IMG_|IMG)([0-9]{4})([0-9]{2})([0-9]{2})_?([0-9]{2})([0-9]{2})([0-9]{2}) ]]; then
+    # 1. VID-YYYYMMDD-WAXXXX.mp4 (VID-20241003-WA0005.mp4)
+    if [[ "$basename" =~ (VID-)([0-9]{4})([0-9]{2})([0-9]{2})(-WA[0-9]+) ]]; then
+        date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[3]}-${BASH_REMATCH[4]} 12:00:00"
+    
+    # 2. YYYYMMDD_HHMMSS.jpg (20220219_163437.jpg)
+    elif [[ "$basename" =~ ^([0-9]{4})([0-9]{2})([0-9]{2})_([0-9]{2})([0-9]{2})([0-9]{2}) ]]; then
+        date_str="${BASH_REMATCH[1]}-${BASH_REMATCH[2]}-${BASH_REMATCH[3]} ${BASH_REMATCH[4]}:${BASH_REMATCH[5]}:${BASH_REMATCH[6]}"
+    
+    # 3. YYYY-MM-DDHH-MM-SS.jpg (2022-09-0108-45-24.jpg)
+    elif [[ "$basename" =~ ^([0-9]{4})-([0-9]{2})-([0-9]{2})([0-9]{2})-([0-9]{2})-([0-9]{2}) ]]; then
+        date_str="${BASH_REMATCH[1]}-${BASH_REMATCH[2]}-${BASH_REMATCH[3]} ${BASH_REMATCH[4]}:${BASH_REMATCH[5]}:${BASH_REMATCH[6]}"
+    
+    # 4. YYYYMMDD_HHMMSS-COLLAGE.jpg (20210514_151219-COLLAGE.jpg)
+    elif [[ "$basename" =~ ^([0-9]{4})([0-9]{2})([0-9]{2})_([0-9]{2})([0-9]{2})([0-9]{2})- ]]; then
+        date_str="${BASH_REMATCH[1]}-${BASH_REMATCH[2]}-${BASH_REMATCH[3]} ${BASH_REMATCH[4]}:${BASH_REMATCH[5]}:${BASH_REMATCH[6]}"
+    
+    # 5. YYYY-MM-DD_com.* (2023-04-26_com.miui.gallery.records)
+    elif [[ "$basename" =~ ^([0-9]{4})-([0-9]{2})-([0-9]{2})_ ]]; then
+        date_str="${BASH_REMATCH[1]}-${BASH_REMATCH[2]}-${BASH_REMATCH[3]} 12:00:00"
+    
+    # 6. Документ-YYYY-MM-DD-HHMMSS.pdf (Документ-2022-08-28-210406.pdf)
+    elif [[ "$basename" =~ (Документ-)([0-9]{4})-([0-9]{2})-([0-9]{2})-([0-9]{2})([0-9]{2})([0-9]{2}) ]]; then
         date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[3]}-${BASH_REMATCH[4]} ${BASH_REMATCH[5]}:${BASH_REMATCH[6]}:${BASH_REMATCH[7]}"
     
-    # Попытка извлечь дату в формате VIDYYYYMMDDHHMMSS (видео файлы)
+    # 7. PTT-YYYYMMDD-WAXXXX.opus (PTT-20230427-WA0002.opus)
+    elif [[ "$basename" =~ (PTT-)([0-9]{4})([0-9]{2})([0-9]{2})(-WA[0-9]+) ]]; then
+        date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[3]}-${BASH_REMATCH[4]} 12:00:00"
+    
+    # 8. IMG_YYYYMMDD_HHMMSS.jpg
+    elif [[ "$basename" =~ (IMG_|IMG)([0-9]{4})([0-9]{2})([0-9]{2})_?([0-9]{2})([0-9]{2})([0-9]{2}) ]]; then
+        date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[3]}-${BASH_REMATCH[4]} ${BASH_REMATCH[5]}:${BASH_REMATCH[6]}:${BASH_REMATCH[7]}"
+    
+    # 9. VIDYYYYMMDDHHMMSS.mp4
     elif [[ "$basename" =~ (VID)([0-9]{4})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2}) ]]; then
         date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[3]}-${BASH_REMATCH[4]} ${BASH_REMATCH[5]}:${BASH_REMATCH[6]}:${BASH_REMATCH[7]}"
     
-    # Попытка извлечь дату в формате Screenshot_YYYY-MM-DD-HH-MM-SS
+    # 10. Screenshot_YYYY-MM-DD-HH-MM-SS
     elif [[ "$basename" =~ (Screenshot_|WhatsApp Image |IMG-)([0-9]{4})-([0-9]{2})-([0-9]{2})[-_]([0-9]{2})-([0-9]{2})-([0-9]{2}) ]]; then
         date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[3]}-${BASH_REMATCH[4]} ${BASH_REMATCH[5]}:${BASH_REMATCH[6]}:${BASH_REMATCH[7]}"
     
-    # Попытка извлечь дату в формате WhatsApp Image YYYY-MM-DD at HH.MM.SS
+    # 11. WhatsApp Image YYYY-MM-DD at HH.MM.SS
     elif [[ "$basename" =~ (WhatsApp Image )([0-9]{4})-([0-9]{2})-([0-9]{2})( at )([0-9]{2})\.([0-9]{2})\.([0-9]{2}) ]]; then
         date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[3]}-${BASH_REMATCH[4]} ${BASH_REMATCH[6]}:${BASH_REMATCH[7]}:${BASH_REMATCH[8]}"
     
-    # Попытка извлечь дату в формате IMG-YYYYMMDD-WAXXXX
+    # 12. IMG-YYYYMMDD-WAXXXX
     elif [[ "$basename" =~ (IMG-)([0-9]{4})([0-9]{2})([0-9]{2})(-WA[0-9]+) ]]; then
         date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[3]}-${BASH_REMATCH[4]} 12:00:00"
     fi
 
+    echo "$date_str"
+}
+
+# Функция для обработки файла
+process_file() {
+    local filename="$1"
+    local basename=$(basename "$filename")
+    local date_str=$(extract_date "$basename")
+
     if [ -n "$date_str" ]; then
-        # Изменяем дату модификации файла
         if touch -d "$date_str" "$filename" 2>/dev/null; then
             echo "Изменена дата для: $filename → $date_str"
         else
@@ -36,7 +71,6 @@ process_file() {
             echo "Ошибка при изменении даты для: $filename"
         fi
     else
-        # Записываем в файл, если дату не удалось определить
         echo "$(realpath "$filename")" >> "$FAILED_FILES"
         echo "Не удалось определить дату для: $filename"
     fi
@@ -51,16 +85,18 @@ if [ ! -d "$target_dir" ]; then
     exit 1
 fi
 
-# Файл для записи путей к файлам, у которых не удалось определить дату
-FAILED_FILES="$(dirname "$target_dir")/failed_files.txt"
-> "$FAILED_FILES"  # Очищаем файл, если он существует
+# Файл для записи ошибок
+FAILED_FILES="$(dirname "$target_dir")/failed_files_$(date +%Y%m%d_%H%M%S).txt"
+> "$FAILED_FILES"
 
 echo "Начинаем обработку директории: $target_dir"
 echo "Файл с ошибками будет создан: $FAILED_FILES"
 
-# Рекурсивный поиск файлов и обработка каждого
+# Обработка файлов
 find "$target_dir" -type f | while read -r file; do
     process_file "$file"
 done
 
-echo "Обработка завершена. Файлы с неудачными попытками сохранены в $FAILED_FILES"
+echo "Обработка завершена."
+echo "Всего необработанных файлов: $(wc -l < "$FAILED_FILES")"
+echo "Список необработанных файлов сохранен в: $FAILED_FILES"
