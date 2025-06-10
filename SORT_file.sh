@@ -22,7 +22,7 @@ mkdir -p "$target_path"
 process_file() {
     local file="$1"
 
-    # Получаем дату создания файла (или изменения, если creation time недоступен)
+    # Получаем дату изменения файла (mtime)
     local timestamp=$(stat -c %Y "$file" 2>/dev/null || stat -f %m "$file")
     local month_year=$(date -d "@$timestamp" +"%m-%Y" 2>/dev/null)
 
@@ -35,4 +35,40 @@ process_file() {
     local target_dir="${target_path}/${month_year}"
     mkdir -p "$target_dir"
 
-    # Перемещаем файл (с проверкой на перезапись)
+
+
+    # Получаем базовое имя файла
+    local filename=$(basename "$file")
+
+    # Проверяем, существует ли уже файл в целевой директории
+    if [ ! -e "${target_dir}/${filename}" ]; then
+        # Используем rsync для перемещения с сохранением всех атрибутов
+#        rsync -a --remove-source-files "$file" "$target_dir/"
+        rsync -a --progress "$file" "$target_dir/"
+
+message="$(date '+%Y-%m-%d %H:%M:%S')"
+echo "$message Копируем $file в $target_dir"
+        # Проверяем успешность выполнения
+ #       if [ $? -eq 0 ]; then
+ #           # Удаляем исходный файл, если rsync его не удалил (--remove-source-files может оставить пустой файл)
+ #           [ -f "$file" ] && rm "$file"
+ #       else
+ #           echo "Ошибка при перемещении файла '$file'"
+ #           return 1
+ #        fi
+
+
+
+   else
+        echo "Предупреждение: файл '$filename' уже существует в '$target_dir' и не был перемещён"
+        return 1
+    fi
+}
+
+export -f process_file
+export target_path
+
+# Находим все файлы (не директории) и обрабатываем их
+find "$source_path" -type f -exec bash -c 'process_file "$0"' {} \;
+
+echo "Обработка завершена. Файлы перемещены по месяцам в '$target_path' с сохранением всех атрибутов"
