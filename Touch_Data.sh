@@ -82,7 +82,7 @@ extract_date() {
         date_str="${BASH_REMATCH[1]}-${BASH_REMATCH[2]}-${BASH_REMATCH[3]} ${BASH_REMATCH[4]}:${BASH_REMATCH[5]}:${BASH_REMATCH[6]}"
 
     # 20. MM-YYYY_*.pdf (05 2025-2.pdf)
-    elif [[ "$basename" =~ ^([0-9]{2})[ -]([0-9]{4}) ]]; then
+    elif [[ "$basename" =~ ^([0-9]{2})\b[-]([0-9]{4}) ]]; then
         date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[1]}-01 12:00:00"
     fi
 
