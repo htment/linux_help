@@ -8,76 +8,80 @@ extract_date() {
     # 1. VID-YYYYMMDD-WAXXXX.mp4 (VID-20241003-WA0005.mp4)
     if [[ "$basename" =~ (VID-)([0-9]{4})([0-9]{2})([0-9]{2})(-WA[0-9]+) ]]; then
         date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[3]}-${BASH_REMATCH[4]} 12:00:00"
-    
+
     # 2. YYYYMMDD_HHMMSS.jpg (20220219_163437.jpg)
     elif [[ "$basename" =~ ^([0-9]{4})([0-9]{2})([0-9]{2})_([0-9]{2})([0-9]{2})([0-9]{2}) ]]; then
         date_str="${BASH_REMATCH[1]}-${BASH_REMATCH[2]}-${BASH_REMATCH[3]} ${BASH_REMATCH[4]}:${BASH_REMATCH[5]}:${BASH_REMATCH[6]}"
-    
+
     # 3. YYYY-MM-DDHH-MM-SS.jpg (2022-09-0108-45-24.jpg)
     elif [[ "$basename" =~ ^([0-9]{4})-([0-9]{2})-([0-9]{2})([0-9]{2})-([0-9]{2})-([0-9]{2}) ]]; then
         date_str="${BASH_REMATCH[1]}-${BASH_REMATCH[2]}-${BASH_REMATCH[3]} ${BASH_REMATCH[4]}:${BASH_REMATCH[5]}:${BASH_REMATCH[6]}"
-    
+
     # 4. YYYYMMDD_HHMMSS-COLLAGE.jpg (20210514_151219-COLLAGE.jpg)
     elif [[ "$basename" =~ ^([0-9]{4})([0-9]{2})([0-9]{2})_([0-9]{2})([0-9]{2})([0-9]{2})- ]]; then
         date_str="${BASH_REMATCH[1]}-${BASH_REMATCH[2]}-${BASH_REMATCH[3]} ${BASH_REMATCH[4]}:${BASH_REMATCH[5]}:${BASH_REMATCH[6]}"
-    
+
     # 5. YYYY-MM-DD_com.* (2023-04-26_com.miui.gallery.records)
     elif [[ "$basename" =~ ^([0-9]{4})-([0-9]{2})-([0-9]{2})_ ]]; then
         date_str="${BASH_REMATCH[1]}-${BASH_REMATCH[2]}-${BASH_REMATCH[3]} 12:00:00"
-    
+
     # 6. Документ-YYYY-MM-DD-HHMMSS.pdf (Документ-2022-08-28-210406.pdf)
     elif [[ "$basename" =~ (Документ-)([0-9]{4})-([0-9]{2})-([0-9]{2})-([0-9]{2})([0-9]{2})([0-9]{2}) ]]; then
         date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[3]}-${BASH_REMATCH[4]} ${BASH_REMATCH[5]}:${BASH_REMATCH[6]}:${BASH_REMATCH[7]}"
-    
+
     # 7. PTT-YYYYMMDD-WAXXXX.opus (PTT-20230427-WA0002.opus)
     elif [[ "$basename" =~ (PTT-)([0-9]{4})([0-9]{2})([0-9]{2})(-WA[0-9]+) ]]; then
         date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[3]}-${BASH_REMATCH[4]} 12:00:00"
-    
+
     # 8. IMG_YYYYMMDD_HHMMSS.jpg
     elif [[ "$basename" =~ (IMG_|IMG)([0-9]{4})([0-9]{2})([0-9]{2})_?([0-9]{2})([0-9]{2})([0-9]{2}) ]]; then
         date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[3]}-${BASH_REMATCH[4]} ${BASH_REMATCH[5]}:${BASH_REMATCH[6]}:${BASH_REMATCH[7]}"
-    
-    # 9. VIDYYYYMMDDHHMMSS.mp4
+
+    # 9. VID_YYYYMMDD_HHMMSS.mp4 (VID_20210911_161654.mp4, VID_20211211_180233.mp4)
+    elif [[ "$basename" =~ (VID|VID_|VID-)([0-9]{4})([0-9]{2})([0-9]{2})_([0-9]{2})([0-9]{2})([0-9]{2}) ]]; then
+        date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[3]}-${BASH_REMATCH[4]} ${BASH_REMATCH[5]}:${BASH_REMATCH[6]}:${BASH_REMATCH[7]}"
+
+    # 10. VIDYYYYMMDDHHMMSS.mp4
     elif [[ "$basename" =~ (VID)([0-9]{4})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2}) ]]; then
         date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[3]}-${BASH_REMATCH[4]} ${BASH_REMATCH[5]}:${BASH_REMATCH[6]}:${BASH_REMATCH[7]}"
-    
-    # 10. Screenshot_YYYY-MM-DD-HH-MM-SS
+
+    # 11. Screenshot_YYYY-MM-DD-HH-MM-SS
     elif [[ "$basename" =~ (Screenshot_|WhatsApp Image |IMG-)([0-9]{4})-([0-9]{2})-([0-9]{2})[-_]([0-9]{2})-([0-9]{2})-([0-9]{2}) ]]; then
         date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[3]}-${BASH_REMATCH[4]} ${BASH_REMATCH[5]}:${BASH_REMATCH[6]}:${BASH_REMATCH[7]}"
-    
-    # 11. WhatsApp Image YYYY-MM-DD at HH.MM.SS
+
+    # 12. WhatsApp Image YYYY-MM-DD at HH.MM.SS
     elif [[ "$basename" =~ (WhatsApp Image )([0-9]{4})-([0-9]{2})-([0-9]{2})( at )([0-9]{2})\.([0-9]{2})\.([0-9]{2}) ]]; then
         date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[3]}-${BASH_REMATCH[4]} ${BASH_REMATCH[6]}:${BASH_REMATCH[7]}:${BASH_REMATCH[8]}"
-    
-    # 12. IMG-YYYYMMDD-WAXXXX
+
+    # 13. IMG-YYYYMMDD-WAXXXX
     elif [[ "$basename" =~ (IMG-)([0-9]{4})([0-9]{2})([0-9]{2})(-WA[0-9]+) ]]; then
         date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[3]}-${BASH_REMATCH[4]} 12:00:00"
-    
-    # 13. YYYY-MM-DD_HH.MM.SS.jpg (2023-02-2318.42.11.jpg)
+
+    # 14. YYYY-MM-DD_HH.MM.SS.jpg (2023-02-2318.42.11.jpg)
     elif [[ "$basename" =~ ^([0-9]{4})-([0-9]{2})-([0-9]{2})([0-9]{2})\.([0-9]{2})\.([0-9]{2}) ]]; then
         date_str="${BASH_REMATCH[1]}-${BASH_REMATCH[2]}-${BASH_REMATCH[3]} ${BASH_REMATCH[4]}:${BASH_REMATCH[5]}:${BASH_REMATCH[6]}"
-    
-    # 14. STK-YYYYMMDD-WAXXXX.webp (STK-20230412-WA0010.webp)
+
+    # 15. STK-YYYYMMDD-WAXXXX.webp (STK-20230412-WA0010.webp)
     elif [[ "$basename" =~ (STK-)([0-9]{4})([0-9]{2})([0-9]{2})(-WA[0-9]+) ]]; then
         date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[3]}-${BASH_REMATCH[4]} 12:00:00"
-    
-    # 15. AUD-YYYYMMDD-WAXXXX.m4a (AUD-20230507-WA0000.m4a)
+
+    # 16. AUD-YYYYMMDD-WAXXXX.m4a (AUD-20230507-WA0000.m4a)
     elif [[ "$basename" =~ (AUD-)([0-9]{4})([0-9]{2})([0-9]{2})(-WA[0-9]+) ]]; then
         date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[3]}-${BASH_REMATCH[4]} 12:00:00"
-    
-    # 16. DOC-YYYYMMDD-WAXXXX (DOC-20241005-WA0005)
+
+    # 17. DOC-YYYYMMDD-WAXXXX (DOC-20241005-WA0005)
     elif [[ "$basename" =~ (DOC-)([0-9]{4})([0-9]{2})([0-9]{2})(-WA[0-9]+) ]]; then
         date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[3]}-${BASH_REMATCH[4]} 12:00:00"
-    
-    # 17. DD.MM.YYYY_* (05.04.2023_7дом_ДУсЭКОДОМ.pdf)
+
+    # 18. DD.MM.YYYY_* (05.04.2023_7дом_ДУсЭКОДОМ.pdf)
     elif [[ "$basename" =~ ^([0-9]{2})\.([0-9]{2})\.([0-9]{4})_ ]]; then
         date_str="${BASH_REMATCH[3]}-${BASH_REMATCH[2]}-${BASH_REMATCH[1]} 12:00:00"
-    
-    # 18. YYYY-MM-DD-HH-MM-SS_*.mp4 (kate._777_2023-05-17-08-08-41_1684300121096.mp4)
+
+    # 19. YYYY-MM-DD-HH-MM-SS_*.mp4 (kate._777_2023-05-17-08-08-41_1684300121096.mp4)
     elif [[ "$basename" =~ _([0-9]{4})-([0-9]{2})-([0-9]{2})-([0-9]{2})-([0-9]{2})-([0-9]{2})_ ]]; then
         date_str="${BASH_REMATCH[1]}-${BASH_REMATCH[2]}-${BASH_REMATCH[3]} ${BASH_REMATCH[4]}:${BASH_REMATCH[5]}:${BASH_REMATCH[6]}"
-    
-    # 19. MM-YYYY_*.pdf (05 2025-2.pdf)
+
+    # 20. MM-YYYY_*.pdf (05 2025-2.pdf)
     elif [[ "$basename" =~ ^([0-9]{2})[ -]([0-9]{4}) ]]; then
         date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[1]}-01 12:00:00"
     fi
@@ -104,8 +108,13 @@ process_file() {
     fi
 }
 
-# Запрашиваем путь у пользователя
-read -p "Введите путь к директории для обработки: " target_dir
+# Проверяем аргументы командной строки
+if [ $# -eq 0 ]; then
+    echo "Использование: $0 <путь до цели>"
+    exit 1
+fi
+
+target_dir=$1
 
 # Проверяем существует ли директория
 if [ ! -d "$target_dir" ]; then
