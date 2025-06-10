@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# Файл для записи путей к файлам, у которых не удалось определить дату
-FAILED_FILES="failed_files.txt"
-> "$FAILED_FILES"  # Очищаем файл, если он существует
-
 # Функция для извлечения даты из имени файла и изменения времени модификации
 process_file() {
     local filename="$1"
@@ -46,8 +42,24 @@ process_file() {
     fi
 }
 
+# Запрашиваем путь у пользователя
+read -p "Введите путь к директории для обработки: " target_dir
+
+# Проверяем существует ли директория
+if [ ! -d "$target_dir" ]; then
+    echo "Ошибка: Директория '$target_dir' не существует!"
+    exit 1
+fi
+
+# Файл для записи путей к файлам, у которых не удалось определить дату
+FAILED_FILES="$(dirname "$target_dir")/failed_files.txt"
+> "$FAILED_FILES"  # Очищаем файл, если он существует
+
+echo "Начинаем обработку директории: $target_dir"
+echo "Файл с ошибками будет создан: $FAILED_FILES"
+
 # Рекурсивный поиск файлов и обработка каждого
-find . -type f | while read -r file; do
+find "$target_dir" -type f | while read -r file; do
     process_file "$file"
 done
 
