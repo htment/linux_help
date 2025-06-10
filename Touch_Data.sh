@@ -52,6 +52,34 @@ extract_date() {
     # 12. IMG-YYYYMMDD-WAXXXX
     elif [[ "$basename" =~ (IMG-)([0-9]{4})([0-9]{2})([0-9]{2})(-WA[0-9]+) ]]; then
         date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[3]}-${BASH_REMATCH[4]} 12:00:00"
+    
+    # 13. YYYY-MM-DD_HH.MM.SS.jpg (2023-02-2318.42.11.jpg)
+    elif [[ "$basename" =~ ^([0-9]{4})-([0-9]{2})-([0-9]{2})([0-9]{2})\.([0-9]{2})\.([0-9]{2}) ]]; then
+        date_str="${BASH_REMATCH[1]}-${BASH_REMATCH[2]}-${BASH_REMATCH[3]} ${BASH_REMATCH[4]}:${BASH_REMATCH[5]}:${BASH_REMATCH[6]}"
+    
+    # 14. STK-YYYYMMDD-WAXXXX.webp (STK-20230412-WA0010.webp)
+    elif [[ "$basename" =~ (STK-)([0-9]{4})([0-9]{2})([0-9]{2})(-WA[0-9]+) ]]; then
+        date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[3]}-${BASH_REMATCH[4]} 12:00:00"
+    
+    # 15. AUD-YYYYMMDD-WAXXXX.m4a (AUD-20230507-WA0000.m4a)
+    elif [[ "$basename" =~ (AUD-)([0-9]{4})([0-9]{2})([0-9]{2})(-WA[0-9]+) ]]; then
+        date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[3]}-${BASH_REMATCH[4]} 12:00:00"
+    
+    # 16. DOC-YYYYMMDD-WAXXXX (DOC-20241005-WA0005)
+    elif [[ "$basename" =~ (DOC-)([0-9]{4})([0-9]{2})([0-9]{2})(-WA[0-9]+) ]]; then
+        date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[3]}-${BASH_REMATCH[4]} 12:00:00"
+    
+    # 17. DD.MM.YYYY_* (05.04.2023_7дом_ДУсЭКОДОМ.pdf)
+    elif [[ "$basename" =~ ^([0-9]{2})\.([0-9]{2})\.([0-9]{4})_ ]]; then
+        date_str="${BASH_REMATCH[3]}-${BASH_REMATCH[2]}-${BASH_REMATCH[1]} 12:00:00"
+    
+    # 18. YYYY-MM-DD-HH-MM-SS_*.mp4 (kate._777_2023-05-17-08-08-41_1684300121096.mp4)
+    elif [[ "$basename" =~ _([0-9]{4})-([0-9]{2})-([0-9]{2})-([0-9]{2})-([0-9]{2})-([0-9]{2})_ ]]; then
+        date_str="${BASH_REMATCH[1]}-${BASH_REMATCH[2]}-${BASH_REMATCH[3]} ${BASH_REMATCH[4]}:${BASH_REMATCH[5]}:${BASH_REMATCH[6]}"
+    
+    # 19. MM-YYYY_*.pdf (05 2025-2.pdf)
+    elif [[ "$basename" =~ ^([0-9]{2})[ -]([0-9]{4}) ]]; then
+        date_str="${BASH_REMATCH[2]}-${BASH_REMATCH[1]}-01 12:00:00"
     fi
 
     echo "$date_str"
