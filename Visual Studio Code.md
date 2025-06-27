@@ -6,4 +6,7 @@
 
 Сместить бролк 
 ```Tab ->```
+
+![image](https://github.com/user-attachments/assets/13226d0b-7da3-438f-bc81-678ffa727a6c)
+
 ```Shift+Tab<--```
