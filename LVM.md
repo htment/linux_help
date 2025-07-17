@@ -1,34 +1,33 @@
 
 
 
-```
-LVM
 
+LVM
+```
 sudo pvcreate /dev/sdb /dev/sdc /dev/sdd /dev/sde /dev/sdf
 sudo vgcreate vg_group /dev/sdb /dev/sdc /dev/sdd /dev/sde /dev/sdf
 
-
+```
+```
 sudo lvcreate -n lv_data -l 100%FREE vg_group
 
 sudo mkfs.ext4 /dev/vg_group/lv_data
 sudo mount /dev/vg_group/lv_data /mnt/lv_data
-
+```
 
 Проверка созданной конфигурации
 - Чтобы увидеть все физические тома, используйте:
 Bash
 
-
+```
 sudo pvs
+```
 - Для отображения информации о группе томов:
-Bash
-
-
+```
 sudo vgs
+```
 - Для отображения информации о логических томах:
-Bash
-
-
+```
 sudo lvs
 ```
 
@@ -46,61 +45,49 @@ sudo lvs
    Размонтируйте логический том, если он смонтирован:
    
 Bash
-
-
+```
    sudo umount /raid_upl
-   
+```  
 
 2. Проверьте состояние логических томов и групп томов
    Убедитесь, что все логические тома и группы томов находятся в нужном состоянии:
    
-Bash
-
-
+```
    sudo lvdisplay
    sudo vgdisplay
    sudo pvdisplay
-   
+```   
 
 3. Удалите логические тома
    Удалите логический том:
    
-Bash
-
-
+```
    sudo lvremove /dev/vg_group/lv_data
-   
+```   
 
 4. Удалите группу томов
    Удалите группу томов:
    
-Bash
-
-
+```
    sudo vgremove vg_group
-   
+```   
 
 5. Удалите физические тома
    Удалите физические тома, которые связаны с вашими дисками:
-   
-Bash
-
-
+```
    sudo pvremove /dev/sdb
    sudo pvremove /dev/sdc
    sudo pvremove /dev/sdd
    sudo pvremove /dev/sde
    sudo pvremove /dev/sdf
-   
+```   
 
 6. (По желанию) Удалите разделы на дисках
    Если вы хотите полностью очистить диски, используйте fdisk или parted для удаления разделов. Например:
    
-Bash
-
-
+```
    sudo fdisk /dev/sdb
-   
+```   
    Затем следуйте инструкциям для удаления разделов.
 
 
@@ -122,14 +109,16 @@ Bash
 2. Очистка дисков (если нужно)
 Для /dev/sdc:
 
-bash
+```
 sudo fdisk /dev/sdc
+```
 В fdisk нажмите d (удалить раздел), затем w (записать изменения).
 
 Если раздел используется (например, смонтирован), сначала размонтируйте его:
 
-bash
+```
 sudo umount /dev/sdc1
+```
 3. Создание физических томов (PV)
 Установите LVM (если ещё не установлен):
 
@@ -137,52 +126,62 @@ bash
 sudo apt install lvm2
 Создайте PV на обоих дисках:
 
-bash
+```
 sudo pvcreate /dev/sdb /dev/sdc
+```
 Проверьте:
 
-bash
+```
 sudo pvdisplay
+```
 4. Создание группы томов (VG)
 Создайте VG (например, назовите my_vg):
 
-bash
+```
 sudo vgcreate my_vg /dev/sdb /dev/sdc
+```
 Проверьте:
 
-bash
+```
 sudo vgdisplay
+```
 5. Создание логического тома (LV)
 Создайте LV (например, на всё доступное пространство):
 
-bash
+```
 sudo lvcreate -l 100%FREE -n my_lv my_vg
+```
 Проверьте:
 
-bash
+```
 sudo lvdisplay
+```
 6. Форматирование и монтирование
 Отформатируйте LV в нужную ФС (например, ext4):
 
-bash
+```
 sudo mkfs.ext4 /dev/my_vg/my_lv
+```
 Создайте точку монтирования и смонтируйте:
 
-bash
+```
 sudo mkdir /mnt/lvm_storage
 sudo mount /dev/my_vg/my_lv /mnt/lvm_storage
+```
 Для автоматического монтирования при загрузке добавьте запись в /etc/fstab:
 
-bash
+```
 echo "/dev/my_vg/my_lv /mnt/lvm_storage ext4 defaults 0 2" | sudo tee -a /etc/fstab
+```
 Проверка:
-bash
+```
 lsblk
 df -h
+```
 Итог:
 Теперь у вас есть LVM-том, объединяющий /dev/sdb и /dev/sdc. Вы можете расширять его, добавляя новые диски или изменяя размеры существующих томов.
 
-покажи как расширять и уменьшать
+# покажи как расширять и уменьшать
 Управление размерами LVM (расширение и уменьшение)
 LVM (Logical Volume Manager) позволяет гибко управлять разделами: расширять, уменьшать и перемещать данные между физическими томами. Рассмотрим основные операции.
 
