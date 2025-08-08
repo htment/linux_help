@@ -1,0 +1,3 @@
+```
+sudo smartctl -d sat -a /dev/sdc
+```
