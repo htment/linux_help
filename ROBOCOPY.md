@@ -12,20 +12,24 @@ robocopy "f:\ФОТКИ\ТУРЦИЯ 2018" "\\192.168.31.119\upload_119\SORT_fil
 [Console]::OutputEncoding = $oldEncoding
 ```
 Основные параметры:
-"f:\ФОТКИ\ТУРЦИЯ 2018"
+
+``"f:\ФОТКИ\ТУРЦИЯ 2018"``
+
 Источник: Папка, из которой копируются файлы
 
-"\\192.168.31.119\upload_119\SORT_files\UNSORT\ТУРЦИЯ 2018"
+``"\\192.168.31.119\upload_119\SORT_files\UNSORT\ТУРЦИЯ 2018"``
+
 Назначение: Сетевая папка, куда копируются файлы
 
 Ключи (параметры):
-/E - Copy Subdirectories, including Empty ones
+``/E - Copy Subdirectories, including Empty ones``
 Копирует все подкаталоги, включая пустые
 
-/DCOPY:T - Directory Copy Timestamps
+``/DCOPY:T - Directory Copy Timestamps``
 Копирует временные метки каталогов (дата создания/изменения)
 
-/COPY:DAT - Copy Data, Attributes and Timestamps
+``/COPY:DAT - Copy Data, Attributes and Timestamps``
+
 D - Data (содержимое файлов)
 
 A - Attributes (атрибуты файлов)
