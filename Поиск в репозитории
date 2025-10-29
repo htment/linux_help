@@ -1,0 +1,3 @@
+```
+curl -s "https://registry.hub.docker.com/v2/repositories/freeipa/freeipa-server/tags/" | jq -r '.results[] | "\(.name) \(.last_updated)"' | sort
+```
