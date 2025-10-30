@@ -200,3 +200,22 @@ iptables -t nat -A POSTROUTING -d 192.168.31.127 -p tcp --dport 8090 -j MASQUERA
 iptables -A FORWARD -d 192.168.31.127 -p tcp --dport 8090 -j ACCEPT
 iptables -A FORWARD -s 192.168.31.127 -p tcp --sport 8090 -j ACCEPT
 ```
+
+
+
+# Пример полной настройки проброса
+Допустим, мы хотим пробросить порт 9090 на сервер 192.168.31.200:9090:
+```
+bash
+# 1. Добавляем DNAT правила
+sudo iptables -t nat -A PREROUTING -i ens33 -p tcp --dport 9090 -j DNAT --to-destination 192.168.31.200:9090
+sudo iptables -t nat -A PREROUTING -i tailscale0 -p tcp --dport 9090 -j DNAT --to-destination 192.168.31.200:9090
+
+# 2. Разрешаем форвардинг (если нужно)
+sudo iptables -A FORWARD -i ens33 -o ens33 -p tcp --dport 9090 -d 192.168.31.200 -j ACCEPT
+sudo iptables -A FORWARD -i tailscale0 -o ens33 -p tcp --dport 9090 -d 192.168.31.200 -j ACCEPT
+
+# 3. Проверяем
+sudo iptables -t nat -L PREROUTING -n --line-numbers
+```
+
