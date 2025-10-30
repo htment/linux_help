@@ -1,0 +1,22 @@
+Установите Linux Mint обычным способом через графический установщик
+
+После установки и перезагрузки откройте терминал и выполните:
+
+bash
+# Удаляем графическую оболочку Cinnamon
+sudo apt purge cinnamon*
+
+# Удаляем X сервер и графические компоненты
+sudo apt purge xorg*
+
+# Удаляем ненужные пакеты
+sudo apt autoremove --purge
+
+# Устанавливаем системные утилиты для текстового режима
+sudo apt install ssh mc htop nano
+
+# Устанавливаем режим по умолчанию - многопользовательский (текстовый)
+sudo systemctl set-default multi-user.target
+
+# Перезагружаемся
+sudo reboot
