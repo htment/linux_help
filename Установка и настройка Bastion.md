@@ -174,5 +174,12 @@ sudo iptables -A INPUT -p tcp --dport 22 -j DROP
 Доступ к сервису на 192.168.31.115:3000 через 192.168.31.131:3000
 
 
+```
+# Просмотр NAT таблицы
+iptables -t nat -L -n -v
 
+# Просмотр правил FORWARD
+iptables -L FORWARD -n -v
+
+```
 
