@@ -183,3 +183,20 @@ iptables -L FORWARD -n -v
 
 ```
 
+
+2. Основные правила проброса портов
+bash
+
+# PREROUTING - изменение адреса назначения для входящих пакетов
+```
+iptables -t nat -A PREROUTING -d 100.80.221.32 -p tcp --dport 8090 -j DNAT --to-destination 192.168.31.127:8090
+```
+# POSTROUTING - изменение исходного адреса для исходящих пакетов (MASQUERADE)
+```
+iptables -t nat -A POSTROUTING -d 192.168.31.127 -p tcp --dport 8090 -j MASQUERADE
+```
+# FORWARD - разрешение форвардинга для этого трафика
+```
+iptables -A FORWARD -d 192.168.31.127 -p tcp --dport 8090 -j ACCEPT
+iptables -A FORWARD -s 192.168.31.127 -p tcp --sport 8090 -j ACCEPT
+```
