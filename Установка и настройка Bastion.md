@@ -42,9 +42,10 @@ echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward
 
 # Сделать постоянным
 echo 'net.ipv4.ip_forward=1' | sudo tee -a /etc/sysctl.conf
+```
 3. Настройка SSH как джамп-хоста
 а) Настройте SSH-сервер для проброса подключений:
-```
+
 Отредактируйте /etc/ssh/sshd_config:
 ```
 bash
